@@ -16,6 +16,19 @@ if question:
     answer = get_answer(question, df)
     st.session_state.history.append((question, answer))
 
-for q, a in reversed(st.session_state.history):
-    st.write(f"**You:** {q}")
-    st.write(f"**ChatLima:** {a}")
+for i, (q, a) in enumerate(reversed(st.session_state.history)):
+    is_latest = (i == 0)
+
+    if is_latest:
+        style = "opacity:1; background-color:#FFFFFF; color:#000000; padding:10px; border-radius:8px; margin-bottom:8px; box-shadow: 0 1px 4px rgba(0,0,0,0.15);"
+    else:
+        style = "opacity:0.4; background-color:transparent; padding:10px; margin-bottom:8px;"
+
+    st.markdown(
+        f"""
+        <div style="{style}">
+            {a}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
