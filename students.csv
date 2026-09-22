@@ -1,5 +1,26 @@
-name,branch,marks,attendance
-Ravi,CSE,82,91
-Sita,ECE,91,88
-Anil,EEE,76,95
-Rani,MCA,,89
+roll_no,name,branch,marks,attendance
+CSE01,Ravi Kumar,CSE,82,91
+CSE02,Sita Reddy,CSE,91,88
+CSE03,Arjun Rao,CSE,67,79
+CSE04,Priya Sharma,CSE,88,95
+CSE05,Vikram Singh,CSE,73,84
+ECE01,Anil Varma,ECE,76,95
+ECE02,Divya Nair,ECE,90,92
+ECE03,Karthik Reddy,ECE,,89
+ECE04,Lakshmi Devi,ECE,85,90
+ECE05,Suresh Babu,ECE,69,81
+EEE01,Rani Prasad,EEE,,89
+EEE02,Manoj Kumar,EEE,78,86
+EEE03,Swathi Rao,EEE,92,97
+EEE04,Deepak Chandra,EEE,64,75
+EEE05,Anjali Menon,EEE,81,88
+MCA01,Ramesh Gupta,MCA,74,83
+MCA02,Neha Verma,MCA,89,94
+MCA03,Sandeep Yadav,MCA,71,80
+MCA04,Pooja Iyer,MCA,95,98
+MCA05,Vinay Kumar,MCA,68,77
+ME01,Harish Chandra,ME,79,87
+ME02,Meera Pillai,ME,86,91
+ME03,Rajesh Kanna,ME,72,82
+ME04,Sneha Reddy,ME,93,96
+ME05,Kiran Bhat,ME,66,78

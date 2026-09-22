@@ -10,7 +10,19 @@ df = load_data()
 if "history" not in st.session_state:
     st.session_state.history = []
 
-question = st.text_input("Ask me something:")
+col1, col2 = st.columns([4, 1])
+
+with col1:
+    question = st.text_input("Ask me something:")
+
+with col2:
+    button_label = "Clear" if st.session_state.history else "Enter"
+    st.write("")  # matches the label height above the input box
+    st.write("")  # small extra nudge to line up with the input box border
+    if st.button(button_label, use_container_width=True):
+        if st.session_state.history:
+            st.session_state.history = []
+            st.rerun()
 
 if question:
     answer = get_answer(question, df)
