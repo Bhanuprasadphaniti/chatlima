@@ -1,4 +1,5 @@
-name,branch,marks
-Ravi,CSE,82
-Sita,ECE,91
-Anil,EEE,76
+name,branch,marks,attendance
+Ravi,CSE,82,91
+Sita,ECE,91,88
+Anil,EEE,76,95
+Rani,MCA,,89
