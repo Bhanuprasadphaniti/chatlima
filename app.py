@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from data_loader import load_data
 from chatbot import get_answer
 
@@ -17,8 +18,8 @@ with col1:
 
 with col2:
     button_label = "Clear" if st.session_state.history else "Enter"
-    st.write("")  # matches the label height above the input box
-    st.write("")  # small extra nudge to line up with the input box border
+    st.write("")
+    st.write("")
     if st.button(button_label, use_container_width=True):
         if st.session_state.history:
             st.session_state.history = []
@@ -32,15 +33,20 @@ for i, (q, a) in enumerate(reversed(st.session_state.history)):
     is_latest = (i == 0)
 
     if is_latest:
-        style = "opacity:1; background-color:#FFFFFF; color:#000000; padding:10px; border-radius:8px; margin-bottom:8px; box-shadow: 0 1px 4px rgba(0,0,0,0.15);"
+        st.markdown(
+            "<div style='background-color:#FFFFFF; padding:10px; border-radius:8px; "
+            "box-shadow: 0 1px 4px rgba(0,0,0,0.15); margin-bottom:8px;'>",
+            unsafe_allow_html=True
+        )
+        if isinstance(a, pd.DataFrame):
+            st.dataframe(a, hide_index=True, use_container_width=True)
+        else:
+            st.markdown(f"<span style='color:#000000;'>{a}</span>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
     else:
-        style = "opacity:0.4; background-color:transparent; padding:10px; margin-bottom:8px;"
-
-    st.markdown(
-        f"""
-        <div style="{style}">
-            {a}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+        st.markdown("<div style='opacity:0.4; margin-bottom:8px;'>", unsafe_allow_html=True)
+        if isinstance(a, pd.DataFrame):
+            st.dataframe(a, hide_index=True, use_container_width=True)
+        else:
+            st.write(a)
+        st.markdown("</div>", unsafe_allow_html=True)

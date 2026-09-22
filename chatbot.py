@@ -18,56 +18,54 @@ def get_answer(question, df):
         highest_att_words = ["highest attendance", "best attendance"]
         lowest_att_words = ["lowest attendance", "least attendance", "worst attendance"]
 
-        # check specific "highest/lowest" phrases BEFORE generic "marks"/"branch" checks
         if any(phrase in q for phrase in highest_marks_words):
             top = df.loc[df["marks"].idxmax()]
-            return f"{top['name']} scored the highest marks: {int(top['marks'])}."
+            return pd.DataFrame([{"Name": top["name"], "Branch": top["branch"], "Marks": int(top["marks"])}])
 
         if any(phrase in q for phrase in lowest_marks_words):
             bottom = df.loc[df["marks"].idxmin()]
-            return f"{bottom['name']} scored the lowest marks: {int(bottom['marks'])}."
+            return pd.DataFrame([{"Name": bottom["name"], "Branch": bottom["branch"], "Marks": int(bottom["marks"])}])
 
         if any(phrase in q for phrase in highest_att_words):
             top = df.loc[df["attendance"].idxmax()]
-            return f"{top['name']} has the highest attendance: {int(top['attendance'])}%."
+            return pd.DataFrame([{"Name": top["name"], "Branch": top["branch"], "Attendance": int(top["attendance"])}])
 
         if any(phrase in q for phrase in lowest_att_words):
             bottom = df.loc[df["attendance"].idxmin()]
-            return f"{bottom['name']} has the lowest attendance: {int(bottom['attendance'])}%."
+            return pd.DataFrame([{"Name": bottom["name"], "Branch": bottom["branch"], "Attendance": int(bottom["attendance"])}])
 
-        # branch search: "who is in ECE" / "students in CSE"
         for branch_name in df["branch"].unique():
             if branch_name.lower() in q:
-                students_in_branch = df[df["branch"].str.lower() == branch_name.lower()]
-                names = ", ".join(students_in_branch["name"].tolist())
-                return f"{branch_name} students: {names}"
+                subset = df[df["branch"].str.lower() == branch_name.lower()]
+                return subset[["roll_no", "name", "branch"]].rename(
+                    columns={"roll_no": "Roll No", "name": "Name", "branch": "Branch"}
+                )
 
         if any(word in q for word in student_words):
-            names = ", ".join(df["name"].tolist())
-            return f"Students: {names}"
+            return df[["roll_no", "name", "branch"]].rename(
+                columns={"roll_no": "Roll No", "name": "Name", "branch": "Branch"}
+            )
 
         if any(word in q for word in branch_words):
-            branches = ", ".join(sorted(df["branch"].unique()))
-            return f"Branches: {branches}"
+            branches = sorted(df["branch"].unique())
+            return pd.DataFrame({"Branch": branches})
 
         if any(word in q for word in marks_words):
-            parts = []
-            for index, row in df.iterrows():
-                m = int(row["marks"]) if pd.notna(row["marks"]) else "not available"
-                parts.append(f"{row['name']}: {m}")
-            return "Marks — " + ", ".join(parts)
+            table = df[["name", "marks"]].copy()
+            table["marks"] = table["marks"].apply(lambda m: int(m) if pd.notna(m) else "N/A")
+            return table.rename(columns={"name": "Name", "marks": "Marks"})
 
         return "Sorry, I couldn't find anyone with that name."
 
     row = matched_row
-    marks = int(row["marks"]) if pd.notna(row["marks"]) else "not available"
-    attendance = int(row["attendance"]) if pd.notna(row["attendance"]) else "not available"
+    marks = int(row["marks"]) if pd.notna(row["marks"]) else "N/A"
+    attendance = int(row["attendance"]) if pd.notna(row["attendance"]) else "N/A"
 
     if "who" in q:
-        return f"{row['name']} is a {row['branch']} branch student."
+        return pd.DataFrame([{"Name": row["name"], "Branch": row["branch"]}])
     elif "marks" in q:
-        return f"{row['name']}'s marks: {marks}."
+        return pd.DataFrame([{"Name": row["name"], "Marks": marks}])
     elif "attendance" in q:
-        return f"{row['name']}'s attendance: {attendance}."
+        return pd.DataFrame([{"Name": row["name"], "Attendance": attendance}])
     else:
-        return f"{row['name']} is in {row['branch']} branch, marks: {marks}, attendance: {attendance}."
+        return pd.DataFrame([{"Name": row["name"], "Branch": row["branch"], "Marks": marks, "Attendance": attendance}])
